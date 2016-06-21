@@ -2,7 +2,7 @@ module SoftModeTISH
 
 using PyPlot 
 
-export TISH,TISHplot, BE, kBeV
+export TISH,TISHplot, BE, BEWeightedDensity, kBeV
 
 # Following: http://www.cond-mat.de/teaching/DFT/qm1d.html
 # # 1D numeric Shrodinger equation solver, by discretisation to an Eigenvalue problem
@@ -72,5 +72,22 @@ end
 # not quite sure what value should be used for $\mu$, it acts as
 # a normalisation constant for the DoS. I assume it is explicitly a chemical
 # potential, but as the population of Phonons changes, this confuses me.
+
+function BEWeightedDensity(evals, evecs, T=300)
+     totaldensity=0.0
+     for i in 1:length(evals)
+         BEweight=BE(evals[i],evals[1]-kBeV*T,T)
+         # alpha set to kbT below the lowest energy level, ~ unitary summation
+ #        if (BEweight>0.001)
+ #            @printf("T: %03d State: %d : %f eV BE=%f \n",T,i,evals[i],BEweight)
+#        end
+        # Plot of weighted ψ^2 probability densities
+        #plot(BEweight * evecs[:,i].^2)
+        # Sum up density
+        totaldensity+= (BEweight * evecs[:,i].^2) # Density of this structure
+    end
+    totaldensity/=sum(totaldensity) # renormalise probability density to ∫ dx =1
+    return(totaldensity)
+end
 
 end

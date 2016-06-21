@@ -92,21 +92,9 @@ title("Temperature dependent E-ph coupling")
 
 # Iterate over these temperatures
 for T in collect(1:50:1000)  #[1,50,100,150,200,300,600,10000] #collect(1:300) 
-    totaldensity=0.0
-    for i in 1:length(evals)
-        BEweight=BE(evals[i],evals[1]-kBeV*T,T)
-        # alpha set to kbT below the lowest energy level, ~ unitary summation
-#        if (BEweight>0.001)
-#            @printf("T: %03d State: %d : %f eV BE=%f \n",T,i,evals[i],BEweight)
-#        end
-        
-        # Plot of weighted ψ^2 probability densities 
-        #plot(BEweight * evecs[:,i].^2)
-        # Sum up density
-        totaldensity+= (BEweight * evecs[:,i].^2) # Density of this structure
-    end
-    totaldensity/=sum(totaldensity) # renormalise probability density to ∫ dx =1
-    
+
+    totaldensity=BEWeightedDensity(evals, evecs, T)
+
     DeformationPotential(Q)=16E-2*Q^2 # Vaguely fitted to Lucy's data; quadratic form
 #    DeformationPotential(Q)=16E-2*abs(Q) # Linear form
 #    DeformationPotential(Q)=1.0 # constant
