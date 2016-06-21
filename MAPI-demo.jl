@@ -14,10 +14,13 @@ fig=figure(figsize=(12,8)) # Larger than normal figures, for nicer full screen g
 #TISH(r->3*r^2+r)
 #TISH(r->-0.1/abs(r)) # Atom like - 1/r Coulomb potential
 #TISH(r->20*r^2-20*abs(r),100,6) # Pretty crummy mexican hat
-TISH(r->10E-2*r^4-8E-2*r^2,99,5) # Double well potential; for a 'soft mode' quantum harmonic oscillator phonon instability
 #TISH(r->10E-2*r^4-8E-2*r^2,99,0) # Just visualise the above potential (for figure for talk)
 #TISH(r->10E-2*r^4,99,20) # Single well potential
 
+N=99
+V=r->10E-2*r^4-8E-2*r^2
+evals,evecs=TISH(V,N) # Double well potential; for a 'soft mode' quantum harmonic oscillator phonon instability
+TISHplot(V,evals,evecs,5)
 
 N=99
 evals,evecs=TISH(r->-1E-3*(abs(r+0.5))^-1-1E-3*(abs(r-0.5))^-1,N,4) # Two minima, sort of like a hydrogen molecule

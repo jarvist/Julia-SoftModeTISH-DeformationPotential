@@ -2,7 +2,7 @@ module SoftModeTISH
 
 using PyPlot 
 
-export TISH, BE, kBeV
+export TISH,TISHplot, BE, kBeV
 
 # Following: http://www.cond-mat.de/teaching/DFT/qm1d.html
 # # 1D numeric Shrodinger equation solver, by discretisation to an Eigenvalue problem
@@ -10,14 +10,9 @@ export TISH, BE, kBeV
 
 # V -> anonymous function generating the potential
 # N -> number of points in 
-# n -> number of states to plot (all N states are calculated)
 # dx -> Kinetic Energy operator; goes on the offdiagonal elements in real-space
 function TISH(V,N=99,n=3,dx=1E2/(N-1))
-
-    xlabel("Q")
-    ylabel("Energy (eV) (+ Psi^2)")
-    plot([V(r) for r in -1.0:2/N:1.0],color="black")    # Potential energy curve
-    
+   
     # PE terms on the trace
     diagonal = [(2.0/dx^2 + V(r))::Float64 for r in -1.0:2/N:1.0]
     
@@ -26,21 +21,29 @@ function TISH(V,N=99,n=3,dx=1E2/(N-1))
     H =diagm(diagonal,0) + diagm(updiagonal,1) + diagm(updiagonal,-1)
 
     # And solve with dense eigensolvers
-    evals,evec=eig(H)
+    evals,evecs=eig(H)
+   
+    return evals,evecs
+end
 
+# n -> number of states to plot (all N states are calculated)
+function TISHplot(V,evals,evecs, n=3)
+    N=length(evals)
+    xlabel("Q")
+    ylabel("Energy (eV) (+ Psi^2)")
+    plot([V(r) for r in -1.0:2/N:1.0],color="black")    # Potential energy curve
+    
     # This many eigenenergies
     for i in 1:n
         # Ψ ; the wavefunction, offset by the eigenvalue
-        plot(1E-2.*evec[:,i]+evals[i])
+        plot(1E-2.*evecs[:,i]+evals[i])
         
         # Ψ^2 , the Prob. density, plotted grey, offset by the eigenvalues
-        plot(1E-1.*evec[:,i].^2+evals[i],color="grey")
+        plot(1E-1.*evecs[:,i].^2+evals[i],color="grey")
         # Ψ^2, the prob density, filled curve in semi-tranparent grey, offset + to the eigenvalues
-        fill_between(0:N,evals[i],evals[i]+1E-1.*evec[:,i].^2,color="grey",alpha=0.3)
+        fill_between(1:N,evals[i],evals[i]+1E-1.*evecs[:,i].^2,color="grey",alpha=0.3)
     end
-    
-    return evals,evec
-end
+end 
 
 # Right - very well! We have a 1D TISH solver.  
 
