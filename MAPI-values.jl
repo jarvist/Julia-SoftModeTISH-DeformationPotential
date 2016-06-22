@@ -11,9 +11,19 @@ fig=figure(figsize=(12,8)) # Larger than normal figures, for nicer full screen g
 
 ### All singing
 
-N=1000
-dx=1E2/(N-1)
-evals,evecs=TISH(r->20E-2*r^4-10E-2*r^2,N,10,dx) # Double well potential; for a 'soft mode' quantum harmonic oscillator phonon instability
+N=500
+QMax=150
+#QMax=60 # to compare to Lucy's fit
+#V=r->20E-2*r^4-10E-2*r^2
+#R1 mode
+V=Q-> -3.96276195741e-05*Q^2 + 1.05036527538e-08*Q^4 + 1.50096872115e-15*Q^6 + 7.23239952095e-19*Q^8
+
+#M1 mode
+#V=Q-> 8.15357577448e-18*Q + -2.6032640735e-05*Q^2 + 1.44432132845e-21*Q^3 + 8.98657195055e-09*Q^4 + -3.18891361563e-26*Q^5 + -5.16891155313e-14*Q^6 + 2.72146169582e-30*Q^7 + 6.92418668864e-19*Q^8
+
+dx=5E3/(N-1)
+evals,evecs=TISH(V,N,dx,QMax) # Double well potential; for a 'soft mode' quantum harmonic oscillator phonon instability
+TISHplot(V,evals,evecs,50,QMax)
 #evals,evecs=TISH(r->10E-2*r^4-8E-2*r^2,N,5)
 #evals,evecs=TISH(r->10E-2*r^4,N,20) # Single well potential
 
@@ -26,12 +36,13 @@ title("Temperature dependent E-ph coupling")
 for T in collect(1:10:1000)  #[1,50,100,150,200,300,600,10000] #collect(1:300) 
     totaldensity=BEWeightedDensity(evals,evecs,T)
     
-    DeformationPotential(Q)=16E-2*Q^2 # Vaguely fitted to Lucy's data; quadratic form
+    DeformationPotential(Q)=160E-3*(Q/70.0)^2 # Vaguely fitted to Lucy's data; quadratic form
 #    DeformationPotential(Q)=16E-2*abs(Q) # Linear form
 #    DeformationPotential(Q)=1.0 # constant
     
-    DeformationTabulated=[DeformationPotential(Q)::Float64 for Q in -1.0:2/N:1.0]
-#    plot(DeformationTabulated,color="pink")    # Q-resolved deformation potential
+# NB: run between [-1.0,1.0]
+    DeformationTabulated=[DeformationPotential(Q)::Float64 for Q in -QMax:(2.0*QMax)/N:QMax]
+    plot(DeformationTabulated,color="pink")    # Q-resolved deformation potential
 
     EPhCouple=totaldensity.*DeformationTabulated
     plot(EPhCouple,label=@sprintf("%d K",T))    # Q-resolved coupling

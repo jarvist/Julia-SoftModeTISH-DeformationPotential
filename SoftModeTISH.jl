@@ -11,10 +11,10 @@ export TISH,TISHplot, BE, BEWeightedDensity, kBeV
 # V -> anonymous function generating the potential
 # N -> number of points in 
 # dx -> Kinetic Energy operator; goes on the offdiagonal elements in real-space
-function TISH(V,N=99,n=3,dx=1E2/(N-1))
+function TISH(V,N=99,dx=1E2/(N-1),range=1.0)
    
     # PE terms on the trace
-    diagonal = [(2.0/dx^2 + V(r))::Float64 for r in -1.0:2/N:1.0]
+    diagonal = [(2.0/dx^2 + V(r))::Float64 for r in -range:2*range/N:range]
     
     # KE terms on the tridiagonals
     updiagonal = [(-1/dx^2)::Float64 for r in 1:N]
@@ -27,21 +27,21 @@ function TISH(V,N=99,n=3,dx=1E2/(N-1))
 end
 
 # n -> number of states to plot (all N states are calculated)
-function TISHplot(V,evals,evecs, n=3)
+function TISHplot(V,evals,evecs, n=3,range=1.0)
     N=length(evals)
     xlabel("Q")
     ylabel("Energy (eV) (+ Psi^2)")
-    plot([V(r) for r in -1.0:2/N:1.0],color="black")    # Potential energy curve
+    plot([V(r) for r in -range:2*range/N:range],color="black")    # Potential energy curve
     
     # This many eigenenergies
     for i in 1:n
         # Ψ ; the wavefunction, offset by the eigenvalue
-        plot(1E-2.*evecs[:,i]+evals[i])
+        plot((1.0/N).*evecs[:,i]+evals[i])
         
         # Ψ^2 , the Prob. density, plotted grey, offset by the eigenvalues
-        plot(1E-1.*evecs[:,i].^2+evals[i],color="grey")
+        plot(sqrt(1.0/N).*evecs[:,i].^2+evals[i],color="grey")
         # Ψ^2, the prob density, filled curve in semi-tranparent grey, offset + to the eigenvalues
-        fill_between(1:N,evals[i],evals[i]+1E-1.*evecs[:,i].^2,color="grey",alpha=0.3)
+        fill_between(1:N,evals[i],evals[i]+sqrt(1.0/N).*evecs[:,i].^2,color="grey",alpha=0.3)
     end
 end 
 
