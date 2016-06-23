@@ -29,19 +29,24 @@ end
 # n -> number of states to plot (all N states are calculated)
 function TISHplot(V,evals,evecs, n=3,range=1.0)
     N=length(evals)
-    xlabel("Q")
+    #xlabel("Q")
+    xlabel(L"$Q_0$ [amu$^{\frac{1}{2}}$ $\AA$]")
     ylabel("Energy (eV) (+ Psi^2)")
-    plot([V(r) for r in -range:2*range/N:range],color="black")    # Potential energy curve
     
+    xrange=collect(-range:2*range/(N-1):range)
+    print(length(xrange))
+    plot(xrange,[V(r) for r in -range:2*range/(N-1):range],color="black")    # Potential energy curve
+    
+
     # This many eigenenergies
     for i in 1:n
         # Ψ ; the wavefunction, offset by the eigenvalue
-        plot((1.0/N).*evecs[:,i]+evals[i])
+        plot(xrange,(1.0/N).*evecs[:,i]+evals[i])
         
         # Ψ^2 , the Prob. density, plotted grey, offset by the eigenvalues
-        plot(sqrt(1.0/N).*evecs[:,i].^2+evals[i],color="grey")
+        plot(xrange,sqrt(1.0/N).*evecs[:,i].^2+evals[i],color="grey")
         # Ψ^2, the prob density, filled curve in semi-tranparent grey, offset + to the eigenvalues
-        fill_between(1:N,evals[i],evals[i]+sqrt(1.0/N).*evecs[:,i].^2,color="grey",alpha=0.3)
+        #fill_between(1:N,evals[i],evals[i]+sqrt(1.0/N).*evecs[:,i].^2,color="grey",alpha=0.3)
     end
 end 
 
@@ -78,16 +83,16 @@ function BEWeightedDensity(evals, evecs, T=300)
      for i in 1:length(evals)
          BEweight=BE(evals[i],evals[1]-kBeV*T,T)
          # alpha set to kbT below the lowest energy level, ~ unitary summation
- #        if (BEweight>0.001)
- #            @printf("T: %03d State: %d : %f eV BE=%f \n",T,i,evals[i],BEweight)
-#        end
-        # Plot of weighted ψ^2 probability densities
-        #plot(BEweight * evecs[:,i].^2)
-        # Sum up density
-        totaldensity+= (BEweight * evecs[:,i].^2) # Density of this structure
-    end
-    totaldensity/=sum(totaldensity) # renormalise probability density to ∫ dx =1
-    return(totaldensity)
+         if (BEweight>0.001)
+             @printf("T: %03d State: %d : %f eV BE=%f \n",T,i,evals[i],BEweight)
+         end
+         # Plot of weighted ψ^2 probability densities
+#         plot(BEweight * evecs[:,i].^2)
+         # Sum up density
+         totaldensity+= (BEweight * evecs[:,i].^2) # Density of this structure
+     end
+     totaldensity/=sum(totaldensity) # renormalise probability density to ∫ dx =1
+     return(totaldensity)
 end
 
 end
