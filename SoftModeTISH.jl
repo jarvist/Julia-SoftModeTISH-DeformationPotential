@@ -46,7 +46,7 @@ function TISHplot(V,evals,evecs, n=3,range=1.0)
         # Ψ^2 , the Prob. density, plotted grey, offset by the eigenvalues
         plot(xrange,sqrt(1.0/N).*evecs[:,i].^2+evals[i],color="grey")
         # Ψ^2, the prob density, filled curve in semi-tranparent grey, offset + to the eigenvalues
-        #fill_between(1:N,evals[i],evals[i]+sqrt(1.0/N).*evecs[:,i].^2,color="grey",alpha=0.3)
+        fill_between(xrange,evals[i],evals[i]+sqrt(1.0/N).*evecs[:,i].^2,color="grey",alpha=0.3)
     end
 end 
 
@@ -83,9 +83,9 @@ function BEWeightedDensity(evals, evecs, T=300)
      for i in 1:length(evals)
          BEweight=BE(evals[i],evals[1]-kBeV*T,T)
          # alpha set to kbT below the lowest energy level, ~ unitary summation
-         if (BEweight>0.001)
-             @printf("T: %03d State: %d : %f eV BE=%f \n",T,i,evals[i],BEweight)
-         end
+#         if (BEweight>0.001)
+#             @printf("T: %03d State: %d : %f eV BE=%f \n",T,i,evals[i],BEweight)
+#         end
          # Plot of weighted ψ^2 probability densities
 #         plot(BEweight * evecs[:,i].^2)
          # Sum up density
