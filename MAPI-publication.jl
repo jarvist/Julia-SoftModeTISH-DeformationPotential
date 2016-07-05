@@ -9,9 +9,9 @@ using SoftModeTISH
 
 ### Global variables 
 N=1500
-QMax=150
+QMax=150.0
 #QMax=60 # to compare to Lucy's fit
-
+QLimit=70.0 #xlim for plotting; so PDF and potential align
 
 # Function to wrap everything that was in a script
 function publicationimages(modename,V)
@@ -26,7 +26,7 @@ fig=figure()
 TISHplot(V,evals,evecs,200,QMax) # Plot eigenmodes
 
 PyPlot.ylim((-0.04,0.04))
-PyPlot.xlim((-70.0,70.0))
+PyPlot.xlim((-QLimit,QLimit))
 
 PyPlot.tight_layout()
 PyPlot.savefig(string(modename,"-Modes.png"), format="png", dpi=600)
@@ -73,6 +73,7 @@ for T in [50,150,300,3000] #collect(1:10:1000)  #[1,50,100,150,200,300,600,10000
 end
 legend(loc="upper right",fancybox="true") # Create a legend of all the existing plots using their labels as names
 
+PyPlot.xlim((-QLimit,QLimit))
 PyPlot.tight_layout()
 PyPlot.savefig(string(modename,"-PDF.png"), format="png", dpi=300)
 
