@@ -47,7 +47,9 @@ ylabel("DoS")
 #title("Nuclear Coordinate Density of State")
 
 
-DeformationPotential(Q)=160E-3*(Q/70.0)^2 # Vaguely fitted to Lucy's data; quadratic form
+#DeformationPotential(Q)=160E-3*(Q/70.0)^2 # Vaguely fitted to Lucy's data; quadratic form
+#
+DeformationPotential(Q)=2.3E-5*Q^2 - 3.3E-10*Q^4
 #    DeformationPotential(Q)=16E-2*abs(Q) # Linear form
 #    DeformationPotential(Q)=1.0 # constant
 DeformationTabulated=[DeformationPotential(Q)::Float64 for Q in -QMax:(2.0*QMax)/N:QMax]
@@ -74,7 +76,7 @@ end
 legend(loc="upper right",fancybox="true") # Create a legend of all the existing plots using their labels as names
 
 PyPlot.xlim((-QLimit,QLimit))
-PyPlot.tight_layout()
+#PyPlot.tight_layout()
 PyPlot.savefig(string(modename,"-PDF.png"), format="png", dpi=300)
 
 for T in collect(1:10:1000)  
