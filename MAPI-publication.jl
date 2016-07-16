@@ -48,13 +48,14 @@ ylabel("DoS")
 
 
 #DeformationPotential(Q)=160E-3*(Q/70.0)^2 # Vaguely fitted to Lucy's data; quadratic form
-#
-DeformationPotential(Q)=2.3E-5*Q^2 - 3.3E-10*Q^4
+DeformationPotential(Q)=2.3E-5*Q^2 - 3.3E-10*Q^4 # Improved fit; data from Slack 10-07-16
 #    DeformationPotential(Q)=16E-2*abs(Q) # Linear form
 #    DeformationPotential(Q)=1.0 # constant
-DeformationTabulated=[DeformationPotential(Q)::Float64 for Q in -QMax:(2.0*QMax)/N:QMax]
-#    plot(DeformationTabulated,color="pink")    # Q-resolved deformation potential
 
+DeformationTabulated=[DeformationPotential(Q)::Float64 for Q in -QMax:(2.0*QMax)/N:QMax]
+
+#show(DeformationTabulated)
+#plot(DeformationTabulated,color="pink")    # Q-resolved deformation potential
 
 # Iterate over temperature and generate PDF figures
 for T in [50,150,300,3000] #collect(1:10:1000)  #[1,50,100,150,200,300,600,10000] #collect(1:300) 
