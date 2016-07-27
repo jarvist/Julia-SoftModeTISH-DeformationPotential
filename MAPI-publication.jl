@@ -23,6 +23,8 @@ println(evals[1]," ",evals[3]," ",evals[4]) # Compare eigenvalues to John's code
 fig=figure()
 #fig=figure(figsize=(12,8)) # Larger than normal figures, for nicer full screen graphs for talks
 
+PyPlot.matplotlib[:rc]("font", family="serif", serif="Times", size=16)
+
 TISHplot(V,evals,evecs,200,QMax) # Plot eigenmodes
 
 PyPlot.ylim((-0.04,0.04))
@@ -39,8 +41,6 @@ fig=figure()
 #fig=figure(figsize=(7.5/2.54, 16.0/2.54)) # new figure please
 # Standardising against Jonathan's Matplotlib settings
 xlabel(L"$Q_0$ [amu$^{\frac{1}{2}}$ $\AA$]")
-#PyPlot.rc('font', **{ 'family' : 'serif', 'size' : '8', 'serif' : 'Times New Roman' })
-#PyPlot.rc('lines', **{ 'linewidth' : 0.5 })
 
 #xlabel("Q")
 ylabel("DoS")
@@ -61,7 +61,7 @@ DeformationTabulated=[DeformationPotential(Q)::Float64 for Q in -QMax:(2.0*QMax)
 for T in [50,150,300,3000] #collect(1:10:1000)  #[1,50,100,150,200,300,600,10000] #collect(1:300) 
     totaldensity=BEWeightedDensity(evals,evecs,T)
     plot(collect(-QMax:2*QMax/N:QMax),totaldensity,label=@sprintf("%d K",T))    # Density profiles 
-    fill_between(collect(-QMax:2*QMax/N:QMax),0,totaldensity,color="grey",alpha=0.15) # Add a filled curve in grey for PDF, with light alpha
+    fill_between(collect(-QMax:2*QMax/N:QMax),0,totaldensity,color="grey",alpha=1.0) #alpha=0.15) # Add a filled curve in grey for PDF, with light alpha
 
     EPhCouple=totaldensity.*DeformationTabulated
 #    plot(EPhCouple,label=@sprintf("%d K",T))    # Q-resolved coupling
@@ -80,13 +80,26 @@ PyPlot.xlim((-QLimit,QLimit))
 #PyPlot.tight_layout()
 PyPlot.savefig(string(modename,"-PDF.png"), format="png", dpi=300)
 
+Ts=[]
+EPhCouples=[]
 for T in collect(1:10:1000)  
     totaldensity=BEWeightedDensity(evals,evecs,T)
     EPhCouple=totaldensity.*DeformationTabulated
 #    plot(EPhCouple,label=@sprintf("%d K",T))    # Q-resolved coupling
-    
+    push!(Ts,T)
+    push!(EPhCouples,sum(EPhCouple))
     @printf("T: %d E-Ph: %f eV\n",T,sum(EPhCouple))
 end
+
+fig=figure()
+#fig=figure(figsize=(7.5/2.54, 16.0/2.54)) # new figure please
+xlabel(L"Temperature [$K$]")
+ylabel(L"Electron Phonon Coupling [$meV$]")
+plot(0.0,0.0) # spurious data point to pin axes to [0,] [0,]
+plot(Ts,EPhCouples*1e3,marker="o",fillstyle="none",markersize=2) #1e3 to convert to meV from eV
+PyPlot.savefig(string(modename,"-ElectronPhononCoupling.png"), format="png", dpi=300)
+
+
 end
 # End of function wrapping
 

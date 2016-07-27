@@ -31,7 +31,7 @@ function TISHplot(V,evals,evecs, n=3,range=1.0)
     N=length(evals)
     #xlabel("Q")
     xlabel(L"$Q_0$ [amu$^{\frac{1}{2}}$ $\AA$]")
-    ylabel("Energy (eV) (+ Psi^2)")
+    ylabel("Energy (eV)") # (+ Psi^2)")
     
     xrange=collect(-range:2*range/(N-1):range)
     print(length(xrange))
