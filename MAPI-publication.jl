@@ -2,7 +2,7 @@
 # Demonostration / scratchpad, orientated towards MAPI zone boundary acoustic tilts
 
 using PyPlot
-pygui(true)
+#pygui(true)
 
 push!(LOAD_PATH,"./") # Temporary versions of modules in PWD
 using SoftModeTISH 
@@ -23,7 +23,7 @@ println(evals[1]," ",evals[3]," ",evals[4]) # Compare eigenvalues to John's code
 fig=figure()
 #fig=figure(figsize=(12,8)) # Larger than normal figures, for nicer full screen graphs for talks
 
-PyPlot.matplotlib[:rc]("font", family="serif", serif="Times", size=24)
+PyPlot.matplotlib[:rc]("font", family="serif", serif="Times", size=18)
 
 TISHplot(V,evals,evecs,200,QMax) # Plot eigenmodes
 
@@ -49,7 +49,8 @@ ylabel("DoS")
 for T in [50,150,300,3000] #collect(1:10:1000)  #[1,50,100,150,200,300,600,10000] #collect(1:300) 
     totaldensity=BEWeightedDensity(evals,evecs,T)
     plot(collect(-QMax:2*QMax/N:QMax),totaldensity,label=@sprintf("%d K",T))    # Density profiles 
-    fill_between(collect(-QMax:2*QMax/N:QMax),0,totaldensity,color="grey",alpha=1.0) #alpha=0.15) # Add a filled curve in grey for PDF, with light alpha
+    fill_between(collect(-QMax:2*QMax/N:QMax),0,totaldensity,color="grey",alpha=0.15) # Add a filled curve in grey for PDF, with light alpha
+#    fill_between(collect(-QMax:2*QMax/N:QMax),0,totaldensity,color="pink") # Add a filled curve in pink for PDF
 
     EPhCouple=totaldensity.*DeformationTabulated
 #    plot(EPhCouple,label=@sprintf("%d K",T))    # Q-resolved coupling
@@ -62,11 +63,12 @@ for T in [50,150,300,3000] #collect(1:10:1000)  #[1,50,100,150,200,300,600,10000
     # Plot this together in a vaguely pleasant way
 #    plot(totaldensity,label=@sprintf("%d K",T)) # Plot the PDF, with a label
 end
-legend(loc="upper right",fancybox="true") # Create a legend of all the existing plots using their labels as names
+legend(loc="upper center",fancybox="false") # Create a legend of all the existing plots using their labels as names
 
-PyPlot.xlim((-QLimit,QLimit))
+PyPlot.xlim((-QLimit,QLimit)) # Nb: Overwrites any fill_between commands; but keeps the Plots. Odd. 
+
 PyPlot.tight_layout()
-PyPlot.savefig(string(modename,"-PDF.png"), format="png", dpi=300)
+PyPlot.savefig(string(modename,"-PDF.png"), format="png", dpi=300) # Transparent bit might cause bad things to happen
 
 Ts=[]
 EPhCouples=[]
