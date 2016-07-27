@@ -46,17 +46,6 @@ xlabel(L"$Q_0$ [amu$^{\frac{1}{2}}$ $\AA$]")
 ylabel("DoS")
 #title("Nuclear Coordinate Density of State")
 
-
-#DeformationPotential(Q)=160E-3*(Q/70.0)^2 # Vaguely fitted to Lucy's data; quadratic form
-DeformationPotential(Q)=2.3E-5*Q^2 - 3.3E-10*Q^4 # Improved fit; data from Slack 10-07-16
-#    DeformationPotential(Q)=16E-2*abs(Q) # Linear form
-#    DeformationPotential(Q)=1.0 # constant
-
-DeformationTabulated=[DeformationPotential(Q)::Float64 for Q in -QMax:(2.0*QMax)/N:QMax]
-
-#show(DeformationTabulated)
-#plot(DeformationTabulated,color="pink")    # Q-resolved deformation potential
-
 # Iterate over temperature and generate PDF figures
 for T in [50,150,300,3000] #collect(1:10:1000)  #[1,50,100,150,200,300,600,10000] #collect(1:300) 
     totaldensity=BEWeightedDensity(evals,evecs,T)
@@ -107,13 +96,37 @@ end
 # General Mexican-hat double-well potential
 #V=r->20E-2*r^4-10E-2*r^2
 
+#DeformationPotential(Q)=160E-3*(Q/70.0)^2 # Vaguely fitted to Lucy's data; quadratic form
+DeformationPotential(Q)=2.3E-5*Q^2 - 3.3E-10*Q^4 # Improved fit; data from Slack 10-07-16
+#    DeformationPotential(Q)=16E-2*abs(Q) # Linear form
+#    DeformationPotential(Q)=1.0 # constant
+
+DeformationTabulated=[DeformationPotential(Q)::Float64 for Q in -QMax:(2.0*QMax)/N:QMax]
+#show(DeformationTabulated)
+#plot(DeformationTabulated,color="pink")    # Q-resolved deformation potential
+
+
 #R1 mode
-modename="R1"
+modename="Biquad-R1"
 V=Q-> -3.96276195741e-05*Q^2 + 1.05036527538e-08*Q^4 + 1.50096872115e-15*Q^6 + 7.23239952095e-19*Q^8
 publicationimages(modename,V) #calculates, generates figures
 
 #M1 mode
-modename="M1"
+modename="Biquad-M1"
 V=Q-> 8.15357577448e-18*Q + -2.6032640735e-05*Q^2 + 1.44432132845e-21*Q^3 + 8.98657195055e-09*Q^4 + -3.18891361563e-26*Q^5 + -5.16891155313e-14*Q^6 + 2.72146169582e-30*Q^7 + 6.92418668864e-19*Q^8
 publicationimages(modename,V)
+
+DeformationPotential(Q)=160E-3*(Q/70.0)^2 # Vaguely fitted to Lucy's data; quadratic form
+DeformationTabulated=[DeformationPotential(Q)::Float64 for Q in -QMax:(2.0*QMax)/N:QMax]
+
+#R1 mode
+modename="Quad-R1"
+V=Q-> -3.96276195741e-05*Q^2 + 1.05036527538e-08*Q^4 + 1.50096872115e-15*Q^6 + 7.23239952095e-19*Q^8
+publicationimages(modename,V) #calculates, generates figures
+
+#M1 mode
+modename="Quad-M1"
+V=Q-> 8.15357577448e-18*Q + -2.6032640735e-05*Q^2 + 1.44432132845e-21*Q^3 + 8.98657195055e-09*Q^4 + -3.18891361563e-26*Q^5 + -5.16891155313e-14*Q^6 + 2.72146169582e-30*Q^7 + 6.92418668864e-19*Q^8
+publicationimages(modename,V)
+
 
