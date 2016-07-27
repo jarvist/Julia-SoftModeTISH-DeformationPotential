@@ -23,7 +23,7 @@ println(evals[1]," ",evals[3]," ",evals[4]) # Compare eigenvalues to John's code
 fig=figure()
 #fig=figure(figsize=(12,8)) # Larger than normal figures, for nicer full screen graphs for talks
 
-PyPlot.matplotlib[:rc]("font", family="serif", serif="Times", size=16)
+PyPlot.matplotlib[:rc]("font", family="serif", serif="Times", size=24)
 
 TISHplot(V,evals,evecs,200,QMax) # Plot eigenmodes
 
@@ -38,7 +38,6 @@ print(evals[1],evals[3],evals[4])
 #evals,evecs=TISH(r->10E-2*r^4,N,20) # Single well potential
 
 fig=figure()
-#fig=figure(figsize=(7.5/2.54, 16.0/2.54)) # new figure please
 # Standardising against Jonathan's Matplotlib settings
 xlabel(L"$Q_0$ [amu$^{\frac{1}{2}}$ $\AA$]")
 
@@ -66,7 +65,7 @@ end
 legend(loc="upper right",fancybox="true") # Create a legend of all the existing plots using their labels as names
 
 PyPlot.xlim((-QLimit,QLimit))
-#PyPlot.tight_layout()
+PyPlot.tight_layout()
 PyPlot.savefig(string(modename,"-PDF.png"), format="png", dpi=300)
 
 Ts=[]
@@ -81,11 +80,12 @@ for T in collect(1:10:1000)
 end
 
 fig=figure()
-#fig=figure(figsize=(7.5/2.54, 16.0/2.54)) # new figure please
 xlabel(L"Temperature [$K$]")
 ylabel(L"Electron Phonon Coupling [$meV$]")
 plot(0.0,0.0) # spurious data point to pin axes to [0,] [0,]
 plot(Ts,EPhCouples*1e3,marker="o",fillstyle="none",markersize=2) #1e3 to convert to meV from eV
+
+PyPlot.tight_layout()
 PyPlot.savefig(string(modename,"-ElectronPhononCoupling.png"), format="png", dpi=300)
 
 
