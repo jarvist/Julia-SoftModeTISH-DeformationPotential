@@ -35,6 +35,14 @@ PyPlot.matplotlib[:rc]("lines",linewidth=0.5)
 
 fig=figure(figsize=figSize)
 
+# I hate PyPlot; labourious set all the axes lines to be sensible thinness
+ax=axes()
+ax[:spines]["left"][:set_linewidth](0.5)
+ax[:spines]["right"][:set_linewidth](0.5)
+ax[:spines]["bottom"][:set_linewidth](0.5)
+ax[:spines]["top"][:set_linewidth](0.5)
+
+
 TISHplot(V,evals,evecs,200,QMax) # Plot eigenmodes
 
 PyPlot.ylim((-0.04,0.02))
@@ -49,6 +57,16 @@ print(evals[1],evals[3],evals[4])
 
 fig=figure(figsize=figSize)
 #fig=figure()
+
+# I hate PyPlot; labourious set all the axes lines to be sensible thinness
+ax=axes()
+ax[:spines]["left"][:set_linewidth](0.5)
+ax[:spines]["right"][:set_linewidth](0.5)
+ax[:spines]["bottom"][:set_linewidth](0.5)
+ax[:spines]["top"][:set_linewidth](0.5)
+
+ax[:yaxis][:set_ticklabels]([]) # Turn off numbers for tick lines, leave ticks
+
 # Standardising against Jonathan's Matplotlib settings
 xlabel(L"$Q_0$ [amu$^{\frac{1}{2}}$ $\AA$]")
 
@@ -95,6 +113,13 @@ end
 
 fig=figure(figsize=figSize)
 #fig=figure()
+# I hate PyPlot; labourious set all the axes lines to be sensible thinness
+ax=axes()
+ax[:spines]["left"][:set_linewidth](0.5)
+ax[:spines]["right"][:set_linewidth](0.5)
+ax[:spines]["bottom"][:set_linewidth](0.5)
+ax[:spines]["top"][:set_linewidth](0.5)
+
 xlabel(L"Temperature [$K$]")
 ylabel(L"Electron Phonon Coupling [$meV$]")
 plot(0.0,0.0) # spurious data point to pin axes to [0,] [0,]
